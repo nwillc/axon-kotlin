@@ -1,0 +1,89 @@
+package io.axoniq.foodordering.command
+
+import io.axoniq.foodordering.coreapi.CreateFoodCartCommand
+import io.axoniq.foodordering.coreapi.DeselectProductCommand
+import io.axoniq.foodordering.coreapi.FoodCartCreatedEvent
+import io.axoniq.foodordering.coreapi.ProductDeselectedEvent
+import io.axoniq.foodordering.coreapi.ProductDeselectionException
+import io.axoniq.foodordering.coreapi.ProductSelectedEvent
+import io.axoniq.foodordering.coreapi.SelectProductCommand
+import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.test.aggregate.AggregateTestFixture
+import org.axonframework.test.aggregate.FixtureConfiguration
+import org.axonframework.test.aggregate.ResultValidator
+import org.axonframework.test.aggregate.TestExecutor
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.util.UUID
+
+
+class FoodCartTest {
+
+    private lateinit var fixture: FixtureConfiguration<FoodCart>
+
+    @BeforeEach
+    fun setUp() {
+        fixture = AggregateTestFixture(FoodCart::class.java)
+    }
+
+    @Test
+    fun `should create food cart`() {
+        val foodCartId = UUID.randomUUID()!!
+        fixture.givenNoPriorActivity()
+            .WHEN(CreateFoodCartCommand(foodCartId))
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(FoodCartCreatedEvent(foodCartId))
+    }
+
+    @Test
+    fun `should add product`() {
+        val foodCartId = UUID.randomUUID()!!
+        val productId = UUID.randomUUID()!!
+        fixture.GIVEN(FoodCartCreatedEvent(foodCartId))
+            .WHEN(SelectProductCommand(foodCartId, productId, 1))
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(ProductSelectedEvent(foodCartId, productId, 1))
+            .expectState {
+                assertThat(it?.selectedProducts).containsKey(productId)
+            }
+    }
+
+    @Test
+    fun `should sum selected products`() {
+        val foodCartId = UUID.randomUUID()!!
+        val productId = UUID.randomUUID()!!
+        fixture.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
+            .WHEN(SelectProductCommand(foodCartId, productId, 3))
+            .expectSuccessfulHandlerExecution()
+            .expectState {
+                it as FoodCart
+                assertThat(it.selectedProducts[productId]).isEqualTo(4)
+            }
+    }
+
+    @Test
+    fun `should subtract deselected products`() {
+        val foodCartId = UUID.randomUUID()!!
+        val productId = UUID.randomUUID()!!
+        fixture.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
+            .WHEN(DeselectProductCommand(foodCartId, productId, 1))
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(ProductDeselectedEvent(foodCartId, productId, 1))
+            .expectState {
+                it as FoodCart
+                assertThat(it.selectedProducts[productId]).isEqualTo(0)
+            }
+    }
+
+    @Test
+    fun `should fail to deselected products not in food cart`() {
+        val foodCartId = UUID.randomUUID()!!
+        val productId = UUID.randomUUID()!!
+        fixture.GIVEN(FoodCartCreatedEvent(foodCartId))
+            .WHEN(DeselectProductCommand(foodCartId, productId, 1))
+            .expectException(ProductDeselectionException::class.java)
+    }
+}
+
+fun <T> FixtureConfiguration<T>.GIVEN(vararg event: Any): TestExecutor<T> = this.given(*event)
+fun <T> TestExecutor<T>.WHEN(command: Any): ResultValidator<T> = this.`when`(command)

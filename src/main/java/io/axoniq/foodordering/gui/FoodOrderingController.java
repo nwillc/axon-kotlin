@@ -47,7 +47,7 @@ class FoodOrderingController {
     public void deselectProduct(@PathVariable("foodCartId") String foodCartId,
                                 @PathVariable("productId") String productId,
                                 @PathVariable("quantity") Integer quantity) {
-        commandGateway.send(new DeselectProductCommand(
+        commandGateway.sendAndWait(new DeselectProductCommand(
                 UUID.fromString(foodCartId), UUID.fromString(productId), quantity
         ));
     }

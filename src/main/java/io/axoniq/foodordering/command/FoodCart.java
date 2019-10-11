@@ -28,7 +28,7 @@ class FoodCart {
 
     @AggregateIdentifier
     private UUID foodCartId;
-    private Map<UUID, Integer> selectedProducts;
+    Map<UUID, Integer> selectedProducts;
     private boolean confirmed;
 
     public FoodCart() {
