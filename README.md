@@ -1,7 +1,7 @@
 # Axon Spike Using Gradle, Jib and Skaffold
 
  - Have `docker` up and running
- - Have `minikube` set up running
+ - Have `minikube` set up and running
  - Install skaffold: `brew install skaffold`
  - Set up an image repository
    - Install cred helper: `brew install docker-credential-helper`
