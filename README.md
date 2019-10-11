@@ -23,3 +23,15 @@ The videos relating to this guide can be found on AxonIQ's [YouTube channel](htt
 |  3   | [Github Branch](https://github.com/AxonIQ/food-ordering-demo/tree/part-3) / [YouTube Video](https://www.youtube.com/watch?v=7oy4w5THFEU) |
 |  4   | [Github Branch](https://github.com/AxonIQ/food-ordering-demo/tree/part-4) / [YouTube Video](https://www.youtube.com/watch?v=jS1vfc5EohM) |
 |  5   | [Github Branch](https://github.com/AxonIQ/food-ordering-demo/tree/part-5) / [YouTube Video](https://www.youtube.com/watch?v=lxonQnu1txQ) |
+
+## Notes
+ - Install cred helper: `brew install docker-credential-helper`
+ - docker login
+ - Run axon server on LOCAL.IP.ADDRESS and expose ports: `docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver`
+ - set `axon.axonserver.servers=LOCAL.IP.ADDRESS` in application.properties
+ - skaffold run --tail
+ - kubectl port-forward svc/foodcart 8080:8080
+ 
+The above will start an axon server in a docker image, run your app in minikube, expose it's port back to the local machine
+allowing you to target it as http://localhost:8080.
+ 

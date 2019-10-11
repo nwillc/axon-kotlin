@@ -14,6 +14,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.springframework.boot") version "2.1.9.RELEASE"
     id("com.github.nwillc.vplugin") version "3.0.1"
+    id("com.google.cloud.tools.jib") version "1.6.1"
 }
 
 apply(plugin = "io.spring.dependency-management")
@@ -48,6 +49,10 @@ dependencies {
         .forEach { testImplementation(it) }
 }
 
+application {
+    mainClassName = "io.axoniq.foodordering.FoodOrderingApplication"
+}
+
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = jvmTargetVersion
@@ -58,5 +63,15 @@ tasks {
             showStandardStreams = true
             events("passed", "skipped", "failed")
         }
+    }
+}
+
+jib {
+    to {
+        image = "nwillc/foodcart"
+        tags = setOf("latest")
+    }
+    container {
+        ports = listOf("8080")
     }
 }

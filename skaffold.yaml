@@ -1,0 +1,11 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+build:
+  artifacts:
+    - image: nwillc/foodcart
+      jib: {}
+portForward:
+  - resourceType: deployment
+    resourceName: foodcart
+    port: 8080
+    localPort: 8080
