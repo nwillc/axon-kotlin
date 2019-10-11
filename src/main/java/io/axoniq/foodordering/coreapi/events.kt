@@ -4,7 +4,11 @@ import java.util.*
 
 class FoodCartCreatedEvent(
         val foodCartId: UUID
-)
+) {
+        init {
+            println("New food cart id: $foodCartId")
+        }
+}
 
 data class ProductSelectedEvent(
         val foodCartId: UUID,

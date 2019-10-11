@@ -5,7 +5,7 @@ build:
     - image: nwillc/foodcart
       jib: {}
 portForward:
-  - resourceType: deployment
+  - resourceType: service
     resourceName: foodcart
     port: 8080
     localPort: 8080
