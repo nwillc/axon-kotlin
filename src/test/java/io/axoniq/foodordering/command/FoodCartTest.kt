@@ -19,17 +19,17 @@ import java.util.UUID
 
 class FoodCartTest {
 
-    private lateinit var fixture: FixtureConfiguration<FoodCart>
+    private lateinit var foodCart: FixtureConfiguration<FoodCart>
 
     @BeforeEach
     fun setUp() {
-        fixture = AggregateTestFixture(FoodCart::class.java)
+        foodCart = AggregateTestFixture(FoodCart::class.java)
     }
 
     @Test
     fun `should create food cart`() {
         val foodCartId = UUID.randomUUID()!!
-        fixture.givenNoPriorActivity()
+        foodCart.givenNoPriorActivity()
             .WHEN(CreateFoodCartCommand(foodCartId))
             .expectSuccessfulHandlerExecution()
             .expectEvents(FoodCartCreatedEvent(foodCartId))
@@ -39,7 +39,7 @@ class FoodCartTest {
     fun `should add product`() {
         val foodCartId = UUID.randomUUID()!!
         val productId = UUID.randomUUID()!!
-        fixture.GIVEN(FoodCartCreatedEvent(foodCartId))
+        foodCart.GIVEN(FoodCartCreatedEvent(foodCartId))
             .WHEN(SelectProductCommand(foodCartId, productId, 1))
             .expectSuccessfulHandlerExecution()
             .expectEvents(ProductSelectedEvent(foodCartId, productId, 1))
@@ -52,7 +52,7 @@ class FoodCartTest {
     fun `should sum selected products`() {
         val foodCartId = UUID.randomUUID()!!
         val productId = UUID.randomUUID()!!
-        fixture.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
+        foodCart.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
             .WHEN(SelectProductCommand(foodCartId, productId, 3))
             .expectSuccessfulHandlerExecution()
             .expectState {
@@ -65,7 +65,7 @@ class FoodCartTest {
     fun `should subtract deselected products`() {
         val foodCartId = UUID.randomUUID()!!
         val productId = UUID.randomUUID()!!
-        fixture.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
+        foodCart.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
             .WHEN(DeselectProductCommand(foodCartId, productId, 1))
             .expectSuccessfulHandlerExecution()
             .expectEvents(ProductDeselectedEvent(foodCartId, productId, 1))
@@ -79,7 +79,7 @@ class FoodCartTest {
     fun `should fail to deselected products not in food cart`() {
         val foodCartId = UUID.randomUUID()!!
         val productId = UUID.randomUUID()!!
-        fixture.GIVEN(FoodCartCreatedEvent(foodCartId))
+        foodCart.GIVEN(FoodCartCreatedEvent(foodCartId))
             .WHEN(DeselectProductCommand(foodCartId, productId, 1))
             .expectException(ProductDeselectionException::class.java)
     }

@@ -5,7 +5,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.*
 
 class CreateFoodCartCommand(
-        @RoutingKey val foodCartId: UUID
+        @TargetAggregateIdentifier val foodCartId: UUID
 )
 
 data class SelectProductCommand(
