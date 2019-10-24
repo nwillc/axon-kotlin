@@ -1,102 +1,103 @@
-package io.axoniq.foodordering.command;
+package io.axoniq.foodordering.command
 
-import io.axoniq.foodordering.api.ConfirmOrderCommand;
-import io.axoniq.foodordering.api.CreateFoodCartCommand;
-import io.axoniq.foodordering.api.DeselectProductCommand;
-import io.axoniq.foodordering.api.FoodCartCreatedEvent;
-import io.axoniq.foodordering.api.OrderConfirmedEvent;
-import io.axoniq.foodordering.api.ProductDeselectedEvent;
-import io.axoniq.foodordering.api.ProductDeselectionException;
-import io.axoniq.foodordering.api.ProductSelectedEvent;
-import io.axoniq.foodordering.api.SelectProductCommand;
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.modelling.command.AggregateRoot;
-import org.axonframework.spring.stereotype.Aggregate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import io.axoniq.foodordering.api.ConfirmOrderCommand
+import io.axoniq.foodordering.api.CreateFoodCartCommand
+import io.axoniq.foodordering.api.DeselectProductCommand
+import io.axoniq.foodordering.api.FoodCartCreatedEvent
+import io.axoniq.foodordering.api.OrderConfirmedEvent
+import io.axoniq.foodordering.api.ProductDeselectedEvent
+import io.axoniq.foodordering.api.ProductDeselectionException
+import io.axoniq.foodordering.api.ProductSelectedEvent
+import io.axoniq.foodordering.api.SelectProductCommand
+import org.axonframework.commandhandling.CommandHandler
+import org.axonframework.eventsourcing.EventSourcingHandler
+import org.axonframework.modelling.command.AggregateIdentifier
+import org.axonframework.modelling.command.AggregateLifecycle
+import org.axonframework.spring.stereotype.Aggregate
+import org.slf4j.LoggerFactory
+import java.util.HashMap
+import java.util.UUID
 
 @Aggregate
-class FoodCart {
-
-    private static final Logger logger = LoggerFactory.getLogger(FoodCart.class);
+internal class FoodCart {
 
     @AggregateIdentifier
-    private UUID foodCartId;
-    Map<UUID, Integer> selectedProducts;
-    private boolean confirmed;
+    private var foodCartId: UUID? = null
+    lateinit var selectedProducts: MutableMap<UUID, Int>
+    private var confirmed: Boolean = false
 
-    public FoodCart() {
+    constructor() {
         // Required by Axon
     }
 
     @CommandHandler
-    public FoodCart(CreateFoodCartCommand command) {
-        AggregateLifecycle.apply(new FoodCartCreatedEvent(command.getFoodCartId()));
+    constructor(command: CreateFoodCartCommand) {
+        AggregateLifecycle.apply(FoodCartCreatedEvent(command.foodCartId))
     }
 
     @CommandHandler
-    public void handle(SelectProductCommand command) {
-        AggregateLifecycle.apply(new ProductSelectedEvent(foodCartId, command.getProductId(), command.getQuantity()));
+    fun handle(command: SelectProductCommand) {
+        AggregateLifecycle.apply(ProductSelectedEvent(foodCartId!!, command.productId, command.quantity))
     }
 
     @CommandHandler
-    public void handle(DeselectProductCommand command) throws ProductDeselectionException {
-        UUID productId = command.getProductId();
-        int quantity = command.getQuantity();
+    @Throws(ProductDeselectionException::class)
+    fun handle(command: DeselectProductCommand) {
+        val productId = command.productId
+        val quantity = command.quantity
 
         if (!selectedProducts.containsKey(productId)) {
-            throw new ProductDeselectionException(
-                    "Cannot deselect a product which has not been selected for this Food Cart"
-            );
+            throw ProductDeselectionException(
+                "Cannot deselect a product which has not been selected for this Food Cart"
+            )
         }
-        if (selectedProducts.get(productId) - quantity < 0) {
-            throw new ProductDeselectionException(
-                    "Cannot deselect more products of ID [" + productId + "] than have been selected initially"
-            );
+        if (selectedProducts[productId]?.minus(quantity) ?: -1 < 0) {
+            throw ProductDeselectionException(
+                "Cannot deselect more products of ID [$productId] than have been selected initially"
+            )
         }
 
-        AggregateLifecycle.apply(new ProductDeselectedEvent(foodCartId, productId, quantity));
+        AggregateLifecycle.apply(ProductDeselectedEvent(foodCartId!!, productId, quantity))
     }
 
     @CommandHandler
-    public void handle(ConfirmOrderCommand command) {
+    fun handle(command: ConfirmOrderCommand) {
         if (confirmed) {
-            logger.warn("Cannot confirm a Food Cart order which is already confirmed");
-            return;
+            logger.warn("Cannot confirm a Food Cart order which is already confirmed")
+            return
         }
 
-        AggregateLifecycle.apply(new OrderConfirmedEvent(foodCartId));
+        AggregateLifecycle.apply(OrderConfirmedEvent(foodCartId!!))
     }
 
     @EventSourcingHandler
-    public void on(FoodCartCreatedEvent event) {
-        foodCartId = event.getFoodCartId();
-        selectedProducts = new HashMap<>();
-        confirmed = false;
+    fun on(event: FoodCartCreatedEvent) {
+        foodCartId = event.foodCartId
+        selectedProducts = HashMap()
+        confirmed = false
     }
 
     @EventSourcingHandler
-    public void on(ProductSelectedEvent event) {
-        selectedProducts.merge(event.getProductId(), event.getQuantity(), Integer::sum);
+    fun on(event: ProductSelectedEvent) {
+        selectedProducts.merge(
+            event.productId,
+            event.quantity
+        ) { a, b -> Integer.sum(a, b) }
     }
 
     @EventSourcingHandler
-    public void on(ProductDeselectedEvent event) {
+    fun on(event: ProductDeselectedEvent) {
         selectedProducts.computeIfPresent(
-                event.getProductId(),
-                (productId, quantity) -> quantity -= event.getQuantity()
-        );
+            event.productId
+        ) { _, quantity -> quantity - event.quantity }
     }
 
     @EventSourcingHandler
-    public void on(OrderConfirmedEvent event) {
-        confirmed = true;
+    fun on(event: OrderConfirmedEvent) {
+        confirmed = true
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(FoodCart::class.java)
     }
 }
