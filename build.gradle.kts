@@ -14,7 +14,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.springframework.boot") version "2.1.9.RELEASE"
     id("com.github.nwillc.vplugin") version "3.0.1"
-    id("com.google.cloud.tools.jib") version "1.6.1"
+    id("com.google.cloud.tools.jib") version "1.7.0"
 }
 
 apply(plugin = "io.spring.dependency-management")

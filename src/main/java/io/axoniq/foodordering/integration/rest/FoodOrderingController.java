@@ -1,9 +1,9 @@
-package io.axoniq.foodordering.gui;
+package io.axoniq.foodordering.integration.rest;
 
-import io.axoniq.foodordering.coreapi.CreateFoodCartCommand;
-import io.axoniq.foodordering.coreapi.DeselectProductCommand;
-import io.axoniq.foodordering.coreapi.FindFoodCartQuery;
-import io.axoniq.foodordering.coreapi.SelectProductCommand;
+import io.axoniq.foodordering.api.CreateFoodCartCommand;
+import io.axoniq.foodordering.api.DeselectProductCommand;
+import io.axoniq.foodordering.api.FindFoodCartQuery;
+import io.axoniq.foodordering.api.SelectProductCommand;
 import io.axoniq.foodordering.query.FoodCartView;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
