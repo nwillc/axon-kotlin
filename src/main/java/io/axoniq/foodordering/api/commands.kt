@@ -1,8 +1,7 @@
 package io.axoniq.foodordering.api
 
-import org.axonframework.commandhandling.RoutingKey
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import java.util.*
+import java.util.UUID
 
 class CreateFoodCartCommand(
         @TargetAggregateIdentifier val foodCartId: UUID

@@ -19,19 +19,16 @@ import java.util.HashMap
 import java.util.UUID
 
 @Aggregate
-internal class FoodCart {
+internal class FoodCart() {
 
     @AggregateIdentifier
     private var foodCartId: UUID? = null
     lateinit var selectedProducts: MutableMap<UUID, Int>
     private var confirmed: Boolean = false
 
-    constructor() {
-        // Required by Axon
-    }
 
     @CommandHandler
-    constructor(command: CreateFoodCartCommand) {
+    constructor(command: CreateFoodCartCommand): this() {
         AggregateLifecycle.apply(FoodCartCreatedEvent(command.foodCartId))
     }
 
