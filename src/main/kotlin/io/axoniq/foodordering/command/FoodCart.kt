@@ -4,9 +4,11 @@ import io.axoniq.foodordering.api.ConfirmOrderCommand
 import io.axoniq.foodordering.api.CreateFoodCartCommand
 import io.axoniq.foodordering.api.DeselectProductCommand
 import io.axoniq.foodordering.api.FoodCartCreatedEvent
+import io.axoniq.foodordering.api.FoodCartId
 import io.axoniq.foodordering.api.OrderConfirmedEvent
 import io.axoniq.foodordering.api.ProductDeselectedEvent
 import io.axoniq.foodordering.api.ProductDeselectionException
+import io.axoniq.foodordering.api.ProductId
 import io.axoniq.foodordering.api.ProductSelectedEvent
 import io.axoniq.foodordering.api.SelectProductCommand
 import org.axonframework.commandhandling.CommandHandler
@@ -22,8 +24,8 @@ import java.util.UUID
 internal class FoodCart {
 
     @AggregateIdentifier
-    private var foodCartId: UUID? = null
-    internal lateinit var selectedProducts: MutableMap<UUID, Int>
+    private var foodCartId: FoodCartId? = null
+    internal lateinit var selectedProducts: MutableMap<ProductId, Int>
     private var confirmed: Boolean = false
 
     @CommandHandler
@@ -78,7 +80,7 @@ internal class FoodCart {
         selectedProducts.merge(
             event.productId,
             event.quantity
-        ) { a, b -> Integer.sum(a, b) }
+        ) { a, b -> a + b }
     }
 
     @EventSourcingHandler

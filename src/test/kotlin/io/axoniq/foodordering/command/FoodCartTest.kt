@@ -3,8 +3,10 @@ package io.axoniq.foodordering.command
 import io.axoniq.foodordering.api.CreateFoodCartCommand
 import io.axoniq.foodordering.api.DeselectProductCommand
 import io.axoniq.foodordering.api.FoodCartCreatedEvent
+import io.axoniq.foodordering.api.FoodCartId
 import io.axoniq.foodordering.api.ProductDeselectedEvent
 import io.axoniq.foodordering.api.ProductDeselectionException
+import io.axoniq.foodordering.api.ProductId
 import io.axoniq.foodordering.api.ProductSelectedEvent
 import io.axoniq.foodordering.api.SelectProductCommand
 import org.assertj.core.api.Assertions.assertThat
@@ -28,7 +30,7 @@ class FoodCartTest {
 
     @Test
     fun `should create food cart`() {
-        val foodCartId = UUID.randomUUID()!!
+        val foodCartId = UUID.randomUUID()
         foodCart.givenNoPriorActivity()
             .WHEN(CreateFoodCartCommand(foodCartId))
             .expectSuccessfulHandlerExecution()
@@ -37,8 +39,8 @@ class FoodCartTest {
 
     @Test
     fun `should add product`() {
-        val foodCartId = UUID.randomUUID()!!
-        val productId = UUID.randomUUID()!!
+        val foodCartId = UUID.randomUUID()
+        val productId = UUID.randomUUID()
         foodCart.GIVEN(FoodCartCreatedEvent(foodCartId))
             .WHEN(SelectProductCommand(foodCartId, productId, 1))
             .expectSuccessfulHandlerExecution()
@@ -50,8 +52,8 @@ class FoodCartTest {
 
     @Test
     fun `should sum selected products`() {
-        val foodCartId = UUID.randomUUID()!!
-        val productId = UUID.randomUUID()!!
+        val foodCartId = UUID.randomUUID()
+        val productId = UUID.randomUUID()
         foodCart.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
             .WHEN(SelectProductCommand(foodCartId, productId, 3))
             .expectSuccessfulHandlerExecution()
@@ -63,8 +65,8 @@ class FoodCartTest {
 
     @Test
     fun `should subtract deselected products`() {
-        val foodCartId = UUID.randomUUID()!!
-        val productId = UUID.randomUUID()!!
+        val foodCartId = UUID.randomUUID()
+        val productId = UUID.randomUUID()
         foodCart.GIVEN(FoodCartCreatedEvent(foodCartId), ProductSelectedEvent(foodCartId, productId, 1))
             .WHEN(DeselectProductCommand(foodCartId, productId, 1))
             .expectSuccessfulHandlerExecution()
@@ -77,8 +79,8 @@ class FoodCartTest {
 
     @Test
     fun `should fail to deselected products not in food cart`() {
-        val foodCartId = UUID.randomUUID()!!
-        val productId = UUID.randomUUID()!!
+        val foodCartId = UUID.randomUUID()
+        val productId = UUID.randomUUID()
         foodCart.GIVEN(FoodCartCreatedEvent(foodCartId))
             .WHEN(DeselectProductCommand(foodCartId, productId, 1))
             .expectException(ProductDeselectionException::class.java)

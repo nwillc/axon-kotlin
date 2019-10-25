@@ -1,7 +1,9 @@
 package io.axoniq.foodordering.query
 
+import io.axoniq.foodordering.api.FoodCartId
+import io.axoniq.foodordering.api.ProductId
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
+import java.util.UUID
 import javax.persistence.ElementCollection
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -9,8 +11,10 @@ import javax.persistence.Id
 
 @Entity
 data class FoodCartView(
-        @Id val foodCartId: UUID,
-        @ElementCollection(fetch = FetchType.EAGER) val products: MutableMap<UUID, Int>
+        @Id
+        val foodCartId: FoodCartId,
+        @ElementCollection(fetch = FetchType.EAGER)
+        val products: MutableMap<ProductId, Int>
 ) {
 
     /**
@@ -19,7 +23,7 @@ data class FoodCartView(
      * The [productId] is not important for the bi-function, hence it's replaced by `_`.
      * Lastly, the `quantity` field in the bi-function is nullable, thus explaining why the elvis operator is in place.
      */
-    fun addProducts(productId: UUID, amount: Int) =
+    fun addProducts(productId: ProductId, amount: Int) =
             products.compute(productId) { _, quantity -> (quantity ?: 0) + amount }
 
     /**
@@ -30,7 +34,7 @@ data class FoodCartView(
      *
      * If the left over quantity is zero, the product will be completely removed from the map.
      */
-    fun removeProducts(productId: UUID, amount: Int) {
+    fun removeProducts(productId: ProductId, amount: Int) {
         val leftOverQuantity = products.compute(productId) { _, quantity -> (quantity ?: 0) - amount }
         if (leftOverQuantity == 0) {
             products.remove(productId)

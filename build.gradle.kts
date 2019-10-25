@@ -60,7 +60,9 @@ noArg {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = jvmTargetVersion
+        kotlinOptions {
+            jvmTarget = jvmTargetVersion
+        }
     }
     withType<Test> {
         useJUnitPlatform()

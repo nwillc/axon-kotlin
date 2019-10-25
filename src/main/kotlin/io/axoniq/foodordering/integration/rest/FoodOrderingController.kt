@@ -3,6 +3,8 @@ package io.axoniq.foodordering.integration.rest
 import io.axoniq.foodordering.api.CreateFoodCartCommand
 import io.axoniq.foodordering.api.DeselectProductCommand
 import io.axoniq.foodordering.api.FindFoodCartQuery
+import io.axoniq.foodordering.api.FoodCartId
+import io.axoniq.foodordering.api.ProductId
 import io.axoniq.foodordering.api.SelectProductCommand
 import io.axoniq.foodordering.query.FoodCartView
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -35,7 +37,9 @@ internal class FoodOrderingController(
     ) =
         commandGateway.send<Any>(
             SelectProductCommand(
-                UUID.fromString(foodCartId), UUID.fromString(productId), quantity!!
+                UUID.fromString(foodCartId),
+                UUID.fromString(productId),
+                quantity!!
             )
         )
 
@@ -47,7 +51,9 @@ internal class FoodOrderingController(
     ) =
         commandGateway.sendAndWait<Any>(
             DeselectProductCommand(
-                UUID.fromString(foodCartId), UUID.fromString(productId), quantity!!
+                UUID.fromString(foodCartId),
+                UUID.fromString(productId),
+                quantity!!
             )
         )
 
