@@ -3,7 +3,7 @@ package io.axoniq.foodordering.api
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.UUID
 
-class CreateFoodCartCommand(
+data class CreateFoodCartCommand(
         @TargetAggregateIdentifier val foodCartId: UUID
 )
 

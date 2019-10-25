@@ -6,6 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 class FoodOrderingApplicationTests {
     @Test
-    fun contextLoads() {
+    fun `should load Spring context`() {
     }
 }

@@ -23,7 +23,7 @@ internal class FoodCart {
 
     @AggregateIdentifier
     private var foodCartId: UUID? = null
-    lateinit var selectedProducts: MutableMap<UUID, Int>
+    internal lateinit var selectedProducts: MutableMap<UUID, Int>
     private var confirmed: Boolean = false
 
     @CommandHandler
@@ -69,7 +69,7 @@ internal class FoodCart {
     @EventSourcingHandler
     fun on(event: FoodCartCreatedEvent) {
         foodCartId = event.foodCartId
-        selectedProducts = HashMap()
+        selectedProducts = mutableMapOf()
         confirmed = false
     }
 
