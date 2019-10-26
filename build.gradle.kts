@@ -51,7 +51,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "io.axoniq.foodordering.FoodOrderingApplication"
+    mainClassName = "io.axoniq.foodordering.FoodOrderingApplicationKt"
 }
 
 noArg {
@@ -70,15 +70,5 @@ tasks {
             showStandardStreams = true
             events("passed", "skipped", "failed")
         }
-    }
-}
-
-jib {
-    to {
-        image = "nwillc/foodcart"
-        tags = setOf("latest")
-    }
-    container {
-        ports = listOf("8080")
     }
 }

@@ -1,5 +1,3 @@
-package io.axoniq.foodordering.api
-
-import java.util.UUID
+package io.axoniq.foodordering.coreapi
 
 data class FindFoodCartQuery(val foodCartId: FoodCartId)

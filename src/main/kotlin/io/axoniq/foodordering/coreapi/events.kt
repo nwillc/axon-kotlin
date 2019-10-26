@@ -1,4 +1,4 @@
-package io.axoniq.foodordering.api
+package io.axoniq.foodordering.coreapi
 
 data class FoodCartCreatedEvent(
         val foodCartId: FoodCartId

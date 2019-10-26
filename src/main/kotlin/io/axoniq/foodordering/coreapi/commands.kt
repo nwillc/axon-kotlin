@@ -1,4 +1,4 @@
-package io.axoniq.foodordering.api
+package io.axoniq.foodordering.coreapi
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.UUID

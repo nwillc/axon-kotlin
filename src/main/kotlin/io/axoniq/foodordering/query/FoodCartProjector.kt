@@ -1,15 +1,12 @@
 package io.axoniq.foodordering.query
 
-import io.axoniq.foodordering.api.FindFoodCartQuery
-import io.axoniq.foodordering.api.FoodCartCreatedEvent
-import io.axoniq.foodordering.api.ProductDeselectedEvent
-import io.axoniq.foodordering.api.ProductId
-import io.axoniq.foodordering.api.ProductSelectedEvent
+import io.axoniq.foodordering.coreapi.FindFoodCartQuery
+import io.axoniq.foodordering.coreapi.FoodCartCreatedEvent
+import io.axoniq.foodordering.coreapi.ProductDeselectedEvent
+import io.axoniq.foodordering.coreapi.ProductSelectedEvent
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.stereotype.Component
-
-import java.util.Collections
 
 @Component
 internal class FoodCartProjector(private val foodCartViewRepository: FoodCartViewRepository) {

@@ -1,11 +1,12 @@
-package io.axoniq.foodordering;
+package io.axoniq.foodordering
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
-public class FoodOrderingApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(FoodOrderingApplication.class, args);
-    }
+class FoodOrderingApplication
+
+
+fun main(args: Array<String>) {
+    SpringApplication.run(FoodOrderingApplication::class.java, *args)
 }

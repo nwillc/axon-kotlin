@@ -1,14 +1,12 @@
 package io.axoniq.foodordering.command
 
-import io.axoniq.foodordering.api.CreateFoodCartCommand
-import io.axoniq.foodordering.api.DeselectProductCommand
-import io.axoniq.foodordering.api.FoodCartCreatedEvent
-import io.axoniq.foodordering.api.FoodCartId
-import io.axoniq.foodordering.api.ProductDeselectedEvent
-import io.axoniq.foodordering.api.ProductDeselectionException
-import io.axoniq.foodordering.api.ProductId
-import io.axoniq.foodordering.api.ProductSelectedEvent
-import io.axoniq.foodordering.api.SelectProductCommand
+import io.axoniq.foodordering.coreapi.CreateFoodCartCommand
+import io.axoniq.foodordering.coreapi.DeselectProductCommand
+import io.axoniq.foodordering.coreapi.FoodCartCreatedEvent
+import io.axoniq.foodordering.coreapi.ProductDeselectedEvent
+import io.axoniq.foodordering.coreapi.ProductDeselectionException
+import io.axoniq.foodordering.coreapi.ProductSelectedEvent
+import io.axoniq.foodordering.coreapi.SelectProductCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration

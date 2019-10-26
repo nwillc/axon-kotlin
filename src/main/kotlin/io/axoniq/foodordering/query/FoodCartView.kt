@@ -1,7 +1,7 @@
 package io.axoniq.foodordering.query
 
-import io.axoniq.foodordering.api.FoodCartId
-import io.axoniq.foodordering.api.ProductId
+import io.axoniq.foodordering.coreapi.FoodCartId
+import io.axoniq.foodordering.coreapi.ProductId
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 import javax.persistence.ElementCollection

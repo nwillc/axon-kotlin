@@ -1,3 +1,3 @@
-package io.axoniq.foodordering.api
+package io.axoniq.foodordering.coreapi
 
 class ProductDeselectionException(message: String) : Exception(message)
