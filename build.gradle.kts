@@ -15,7 +15,6 @@ plugins {
     kotlin("plugin.noarg") version kotlinVersion
     id("org.springframework.boot") version "2.2.0.RELEASE"
     id("com.github.nwillc.vplugin") version "3.0.1"
-    id("com.google.cloud.tools.jib") version "1.7.0"
 }
 
 apply(plugin = "io.spring.dependency-management")
