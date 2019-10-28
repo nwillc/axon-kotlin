@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 internal class FoodCart {
 
     @AggregateIdentifier
-    private var foodCartId: FoodCartId? = null
+    private lateinit var foodCartId: FoodCartId
     internal lateinit var selectedProducts: MutableMap<ProductId, Int>
     private var confirmed: Boolean = false
 
@@ -33,7 +33,7 @@ internal class FoodCart {
 
     @CommandHandler
     fun handle(command: SelectProductCommand) {
-        AggregateLifecycle.apply(ProductSelectedEvent(foodCartId!!, command.productId, command.quantity))
+        AggregateLifecycle.apply(ProductSelectedEvent(foodCartId, command.productId, command.quantity))
     }
 
     @CommandHandler
@@ -53,7 +53,7 @@ internal class FoodCart {
             )
         }
 
-        AggregateLifecycle.apply(ProductDeselectedEvent(foodCartId!!, productId, quantity))
+        AggregateLifecycle.apply(ProductDeselectedEvent(foodCartId, productId, quantity))
     }
 
     @CommandHandler
@@ -63,7 +63,7 @@ internal class FoodCart {
             return
         }
 
-        AggregateLifecycle.apply(OrderConfirmedEvent(foodCartId!!))
+        AggregateLifecycle.apply(OrderConfirmedEvent(foodCartId))
     }
 
     @EventSourcingHandler
